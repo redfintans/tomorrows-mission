@@ -8,14 +8,14 @@
       #header {
         background: #c2f8ff;
         width: 100vw;
-        height: 30px;
-        line-height: 30px;
+        height: 40px;
+        line-height: 40px;
         text-align: center;
         font-size: 14pt;
       }
       #titlescreen {
         position: relative;
-        top: 30vh;
+        top: 25vh;
         font-size: 40pt;
         text-align: center;
         width: 100vw;
@@ -25,14 +25,21 @@
         position: relative;
         width: 60vw;
         left: 20vw;
-        top: 40vh;
+        top: 33vh;
         border: 3px solid #33bbff;
         text-align: center;
-        font-size: 17pt;
+        font-size: 20pt;
       }
       #note {
         position: relative;
-        top: 45vh;
+        top: 48vh;
+        font-size: 10pt;
+        text-align: center;
+        width: 100vw;
+      }
+      #forgot {
+        position: relative;
+        top: 48vh;
         font-size: 10pt;
         text-align: center;
         width: 100vw;
@@ -44,17 +51,40 @@
       inspired by, but not associated with, FREAKBAiT
     </div>
     <div id="titlescreen">TOMORROW'S MISSION</div>
-    <div id="mission">
-      when meeting a person for the first time, say "it's good to see you again!", then insist that you've met them several times before
-    </div>
-    <div id="note">
-      updates every day at 8pm <br> refresh the page
-    </div>
+    <div id="mission"></div>
+    <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
+    <div id="forgot"></div>
     <script>
       const lastEdited = new Date("2026-05-24");
+      //will stop working after 2 june
+      const missions = [
+        `during a meal with someone, see how many straws you can put into your drink before they say something`,
+        `walk up to a stranger in school, say "it's good to see you again!", then insist that you've met them several times before`,
+        `with any friend that you don't have plans with, but who normally sees messages quickly, text "ETA?" and then turn your phone off`,
+        `when introducing two of your friends, mention something normal about one of them to ther other, but act like it's really weird`,
+        `walk up to a stranger in school and ask them "can i ask you a question?", then when they say yes, say "thank you" and walk away`,
+        `while talking to or texting a friend, randomly say "calm down" and then refuse to elaborate afterwards`,
+        `at the end of the day, text a friend saying "sorry i couldn't join you guys today, hope you had fun" even though you didn't have plans`,
+        `give someone a really specific compliment, then in earshot, give someone else the exact same compliment`,
+        `take a picture of your friend's phone, then after they leave, send them that picture and tell them they forgot their phone`,
+        `write a list of all of your friends' names on a piece of paper, cross some of them out, then drop it near a friend as if by accident`
+      ];
+      
+      lastEdited.setHours(20);
       const date = new Date();
       const msSinceIncident = Math.abs(date - lastEdited);
-      const daysSinceIncident = Math.floor(msSinceIncident/86400000)
+      const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
+      const msAfterEight = msSinceIncident - 86400000 * daysSinceIncident;
+
+      if (msAfterEight < 14400000) {
+        document.getElementById("mission").innerHTML = missions[daysSinceIncident];
+      } else {
+        document.getElementById("mission").innerHTML = "no spoilers!";
+      }
+
+      if (daysSinceIncident > 0) {
+        document.getElementById("forgot").innerHTML = "in case you forgot today's mission:<br>" + missions[daysSinceIncident - 1];
+      }
     </script>
   </body>
 </html>
