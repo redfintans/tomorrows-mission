@@ -51,8 +51,10 @@
       updates every day at 8pm <br> refresh the page
     </div>
     <script>
-      const lastedited = new Date("2026-05-24");
+      const lastEdited = new Date("2026-05-24");
       const date = new Date();
+      const msSinceIncident = Math.abs(date - lastEdited);
+      const daysSinceIncident = Math.floor(msSinceIncident/86400000)
     </script>
   </body>
 </html>
