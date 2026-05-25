@@ -70,8 +70,9 @@
         `write a list of all of your friends' names on a piece of paper, cross some of them out, then drop it near a friend as if by accident`
       ];
       
-      lastEdited.setHours(20);
       const date = new Date();
+      const morningsSinceIncident = Math.floor(Math.abs(date - lastEdited) / 86400000);
+      lastEdited.setHours(20);
       const msSinceIncident = Math.abs(date - lastEdited);
       const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
       const msAfterEight = msSinceIncident - 86400000 * daysSinceIncident;
@@ -79,11 +80,12 @@
       if (msAfterEight < 14400000) {
         document.getElementById("mission").innerHTML = missions[daysSinceIncident];
       } else {
-        document.getElementById("mission").innerHTML = "no spoilers!";
+        document.getElementById("mission").innerHTML = "no spoilers! come back tonight for tomorrow's";
+        document.getElementById("mission").style.color = "#808080"
       }
 
-      if (daysSinceIncident > 0) {
-        document.getElementById("forgot").innerHTML = "in case you forgot today's mission:<br>" + missions[daysSinceIncident - 1];
+      if (morningsSinceIncident > 0) {
+        document.getElementById("forgot").innerHTML = "in case you forgot today's mission:<br>" + missions[morningsSinceIncident - 1];
       }
     </script>
   </body>
