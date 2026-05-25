@@ -40,9 +40,7 @@
     </style>
   </head>
   <body>
-    <div id="header">
-      inspired by, but not associated with, FREAKBAiT
-    </div>
+    <div id="header">inspired by, but not associated with, FREAKBAiT</div>
     <div id="titlescreen">TOMORROW'S MISSION</div>
     <div id="mission"></div>
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
@@ -63,7 +61,6 @@
       ];
       
       const date = new Date();
-      //const morningsSinceIncident = Math.floor(Math.abs(date - lastEdited) / 86400000);
       lastEdited.setHours(20);
       const msSinceIncident = Math.abs(date - lastEdited);
       const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
