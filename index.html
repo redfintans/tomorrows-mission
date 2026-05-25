@@ -37,13 +37,6 @@
         text-align: center;
         width: 100vw;
       }
-      #forgot {
-        position: relative;
-        top: 48vh;
-        font-size: 10pt;
-        text-align: center;
-        width: 100vw;
-      }
     </style>
   </head>
   <body>
@@ -53,7 +46,6 @@
     <div id="titlescreen">TOMORROW'S MISSION</div>
     <div id="mission"></div>
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
-    <div id="forgot"></div>
     <script>
       const lastEdited = new Date("2026-05-24");
       //will stop working after 2 june
@@ -79,12 +71,8 @@
 
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
       if (msAfterEight >= 14400000) {
-        document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION"
+        document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
       }
-
-      //if (morningsSinceIncident > 0) {
-        //document.getElementById("forgot").innerHTML = "in case you forgot today's mission:<br>" + missions[morningsSinceIncident - 1];
-      //}
     </script>
   </body>
 </html>
