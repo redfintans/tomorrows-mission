@@ -77,9 +77,8 @@
       const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
       const msAfterEight = msSinceIncident - 86400000 * daysSinceIncident;
 
-      if (msAfterEight < 14400000) {
-        document.getElementById("mission").innerHTML = missions[daysSinceIncident];
-      } else {
+      document.getElementById("mission").innerHTML = missions[daysSinceIncident];
+      if (msAfterEight >= 14400000) {
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION"
       }
 
