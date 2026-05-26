@@ -37,6 +37,25 @@
         text-align: center;
         width: 100vw;
       }
+      #complete {
+        position: relative;
+        top: 55vh;
+        left: 70vw;
+        font-size: 10pt;
+        text-align: center;
+        width: 20vw;
+        visibility: hidden;
+      }
+      #click {
+        position: relative;
+        border: outset 3px #a0a0a0;
+        top: 38vh;
+        left: 70vw;
+        font-size: 12pt;
+        text-align: center;
+        width: 20vw;
+        line-height: 10vh;
+      }
     </style>
   </head>
   <body>
@@ -44,7 +63,53 @@
     <div id="titlescreen">TOMORROW'S MISSION</div>
     <div id="mission"></div>
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
+    <div id="complete">good work! mission completion stored as a cookie</div>
+    <button id="click" onclick="checkMission()">i completed today's mission!</button>
     <script>
+
+      function checkMission() {
+        missionComplete(missions[daysSinceIncident], 365);
+        document.getElementById("click").style.visibility = "hidden";
+        document.getElementById("complete").style.visibility = "visible";
+        setTimeout(hide, 3000);
+      }
+
+      function formatDate(date) {
+        if (date.getMonth() + 1 >= 9) {
+          return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+        } else {
+          return date.getFullYear().toString() + "-0" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString();
+        }
+      }
+
+      function hide() {
+        document.getElementById("complete").style.visibility = "hidden";
+      }
+
+      function missionComplete(text, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        let missionCookies = getCookie("missions");
+        latestMissionCookies = missionCookies.toString() + "&" + text + "#";
+        document.cookie = "missions=" + latestMissionCookies + ";" + expires + ";path=/;";
+      }
+
+      function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
       const lastEdited = new Date("2026-05-24");
       //will stop working after 2 june
       const missions = [
@@ -69,6 +134,16 @@
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
       if (msAfterEight >= 14400000) {
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
+      }
+
+      let completedMissions = getCookie("missions").split("#");
+      completedMissions.pop();
+      for (let mission of completedMissions) {
+        let missionDateParsed = mission.split("&")[0];
+        let missionDate = new Date(missionDateParsed);
+        if (missionDate.getFullYear() == date.getFullYear() & missionDate.getMonth() == date.getMonth() & missionDate.getDate() == date.getDate()) {
+          document.getElementById("click").style.visibility = "hidden";
+        }
       }
     </script>
   </body>
