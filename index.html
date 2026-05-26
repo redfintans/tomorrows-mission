@@ -134,17 +134,20 @@
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
       if (msAfterEight >= 14400000) {
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
+        let completedMissions = getCookie("missions").split("#");
+        completedMissions.pop();
+        for (let mission of completedMissions) {
+          let missionDateParsed = mission.split("&")[0];
+          let missionDate = new Date(missionDateParsed);
+          if (missionDate.getFullYear() == date.getFullYear() & missionDate.getMonth() == date.getMonth() & missionDate.getDate() == date.getDate()) {
+            document.getElementById("click").style.visibility = "hidden";
+          }
+        }
+      } else {
+        document.getElementByIddd("click").style.visibility = "hidden";
       }
 
-      let completedMissions = getCookie("missions").split("#");
-      completedMissions.pop();
-      for (let mission of completedMissions) {
-        let missionDateParsed = mission.split("&")[0];
-        let missionDate = new Date(missionDateParsed);
-        if (missionDate.getFullYear() == date.getFullYear() & missionDate.getMonth() == date.getMonth() & missionDate.getDate() == date.getDate()) {
-          document.getElementById("click").style.visibility = "hidden";
-        }
-      }
+      
     </script>
   </body>
 </html>
