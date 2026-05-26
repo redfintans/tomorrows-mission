@@ -54,7 +54,7 @@
         font-size: 12pt;
         text-align: center;
         width: 20vw;
-        line-height: 10vh;
+        height: 10vh;
       }
 
       /* this is coded like this to piss off everyone including myself */
@@ -431,7 +431,7 @@
     <div id="mission"></div>
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
     <div id="complete">good work! mission completion stored as a cookie</div>
-    <button id="click" onclick="completeMission()">i completed today's mission!</button>
+    <button id="click" onclick="completeMission()">completed today's mission!</button>
     <div id="confet1"></div>
     <div id="confet2"></div>
     <div id="confet3"></div>
@@ -497,7 +497,7 @@
         document.getElementById("click").style.visibility = "hidden";
         document.getElementById("complete").style.visibility = "visible";
         setTimeout(hide, 3000);
-        setTimeout(unleash, 1000);
+        unleash();
       }
 
       function formatDate(date) {
