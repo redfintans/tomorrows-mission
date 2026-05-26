@@ -111,10 +111,7 @@
       }
 
       function nukeCookie(cname) {
-        var d = new Date();
-        d.setTime(d.getTime() - 1);
-        let expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=;" + expires + ";path=/;";
+        document.cookie = "cookieName=" + cname + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         return "";
       }
 
