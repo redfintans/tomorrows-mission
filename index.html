@@ -494,7 +494,7 @@
       }
 
       function completeMission() {
-        missionComplete(missions[daysSinceIncident], 365);
+        missionComplete(missions[daysSinceIncident]);
         document.getElementById("click").style.visibility = "hidden";
         document.getElementById("complete").style.visibility = "visible";
         setTimeout(hide, 3000);
@@ -513,9 +513,9 @@
         document.getElementById("complete").style.visibility = "hidden";
       }
 
-      function missionComplete(text, exdays) {
+      function missionComplete(text) {
         var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        d.setTime(d.getTime() + (1000 * 365 * 24 * 60 * 60 * 1000));
         let expires = "expires=" + d.toUTCString();
         let missionCookies = getCookie("missions");
         latestMissionCookies = missionCookies.toString() + formatDate(date) + "&" + text + "#";
