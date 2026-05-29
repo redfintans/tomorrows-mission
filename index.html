@@ -41,9 +41,17 @@
         width: 100vw;
         color: black;
       }
-      #note2 {
+      #count {
         position: absolute;
         top: 15vh;
+        left: 10vw;
+        font-size: 10pt;
+        text-align: left;
+        color: black;
+      }
+      #streak {
+        position: absolute;
+        top: 21vh;
         left: 10vw;
         font-size: 10pt;
         text-align: left;
@@ -447,7 +455,8 @@
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
     <div id="complete">good work! mission completion stored as a cookie</div>
     <button id="click" onclick="completeMission()">completed today's mission!</button>
-    <div id="note2">completed missions: ERROR</div>
+    <div id="count"></div>
+    <div id="streak"></div>
     <div id="confet1"></div>
     <div id="confet2"></div>
     <div id="confet3"></div>
@@ -480,6 +489,12 @@
     <div id="confet30"></div>
     <script>
       // dummy
+
+      // get rid of this
+      var x = new Date();
+      x.setTime(x.getTime() + 2 * 24 * 60 * 60 * 1000);
+      document.cookie = "streak=" + "2026-05-26#&&&&;" + expires + ";path=/;";
+
       function unleash() {
         for (let i = 0; i < 15; i++){
           let confet = "confet" + (i + 1).toString();
@@ -530,11 +545,44 @@
 
       function missionComplete(text) {
         var d = new Date();
-        d.setTime(d.getTime() + (1000 * 365 * 24 * 60 * 60 * 1000));
+        d.setTime(d.getTime() + (400 * 24 * 60 * 60 * 1000)); // 400 days is the limit for cookie expiration
         let expires = "expires=" + d.toUTCString();
         let missionCookies = getCookie("missions");
-        latestMissionCookies = missionCookies.toString() + formatDate(date) + "&" + text + "#";
+        latestMissionCookies = missionCookies + formatDate(date) + "&" + text + "#";
         document.cookie = "missions=" + latestMissionCookies + ";" + expires + ";path=/;";
+        
+        let streak = streakdatestring_streakinteger_array();
+        let dstreak = new Date(streak[0]);
+        dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
+        if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
+          document.cookie = "streak=" + getCookie("streak") + "&;" + expires + ";path=/;";
+          updateStreak();
+        } else {
+          document.cookie = "streak=" + formatDate(date) + "#&;" + expires + ";path=/;";
+          updateStreak();
+        }
+      }
+
+      function streakdatestring_streakinteger_array() {
+        let streakCookie = getCookie("streak");
+        if (streakCookie != "") {
+          let s = streakCookie.split("#");
+          let streakCount = s.pop().length;
+          return [s[0], streakCount];
+        }
+        return [formatDate((date.getTime() - 2 * 24 * 60 * 60 * 1000), 0)];
+      }
+
+      function updateStreak() {
+        let streakCookie = getCookie("streak");
+        if (streakCookie == "") {
+          var streakNo = 0;
+          var streakDate = "never";
+        } else {
+          var streakNo = streakCookie[1].length;
+          var streakDate = streakCookie[0]; 
+        }
+        document.getElementById("streak").innerHTML = "last mission: " + streakDate + "<br>mission streak: " + streakNo;
       }
 
       function getCookie(cname) {
@@ -577,7 +625,7 @@
       completedMissions.pop();
 
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
-      document.getElementById("note2").innerHTML = "completed missions: " + completedMissions.length;
+      document.getElementById("count").innerHTML = "completed missions: " + completedMissions.length;
 
       if (msAfterEight >= 14400000) {
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
@@ -586,10 +634,12 @@
           let missionDate = new Date(missionDateParsed);
           if (missionDate.getFullYear() == date.getFullYear() & missionDate.getMonth() == date.getMonth() & missionDate.getDate() == date.getDate()) {
             document.getElementById("click").style.visibility = "hidden";
+            updateStreak();
           }
         }
       } else {
         document.getElementById("click").style.visibility = "hidden";
+        updateStreak();
       }
 
 
