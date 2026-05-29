@@ -546,16 +546,7 @@
         latestMissionCookies = missionCookies + formatDate(date) + "&" + text + "#";
         document.cookie = "missions=" + latestMissionCookies + ";" + expires + ";path=/;";
         
-        let streak = streakdatestring_streakinteger_array();
-        let dstreak = new Date(streak[0]);
-        dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
-        if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
-          document.cookie = "streak=" + getCookie("streak") + "&;" + expires + ";path=/;";
-          updateStreak();
-        } else {
-          document.cookie = "streak=" + formatDate(date) + "#&;" + expires + ";path=/;";
-          updateStreak();
-        }
+        updateStreak();
       }
 
       function streakdatestring_streakinteger_array() {
@@ -565,21 +556,54 @@
           let streakCount = s.pop().length;
           return [s[0], streakCount];
         }
-        return [formatDate((date.getTime() - 2 * 24 * 60 * 60 * 1000), 0)];
+        return ["", 0];
       }
 
       function updateStreak() {
+        var d = new Date();
+        d.setTime(d.getTime() + (400 * 24 * 60 * 60 * 1000)); // 400 days is the limit for cookie expiration
+        let expires = "expires=" + d.toUTCString();
+        
         let streakCookie = streakdatestring_streakinteger_array();
-        if (streakCookie == "") {
-          var streakNo = 0;
-          var streakDate = "never";
+        if (streakCookie[0] == "") {
+          document.getElementById("streak").innerHTML = "last mission: never<br>mission streak: 0";
         } else {
-          var streakNo = streakCookie[1];
-          var streakDate = streakCookie[0]; 
+          var streakDate = streakCookie[0];
+          let dstreak = new Date(streakDate);
+          dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
+          if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
+            document.cookie = "streak=" + getCookie("streak") + "&;" + expires + ";path=/;";
+            var streakNo = streakCookie[1] + 1;
+            document.getElementById("streak").innerHTML = "streak start: " + streakDate + "<br>mission streak: " + streakNo;
+          } else {
+            document.cookie = "streak=" + formatDate(date) + "#&;" + expires + ";path=/;";
+            document.getElementById("streak").innerHTML = "last mission: " + formatDate(date) + "<br>mission streak: 1";
+          }
         }
-        document.getElementById("streak").innerHTML = "last mission: " + streakDate + "<br>mission streak: " + streakNo;
       }
 
+      function checkStreak() {
+        var d = new Date();
+        d.setTime(d.getTime() + (400 * 24 * 60 * 60 * 1000)); // 400 days is the limit for cookie expiration
+        let expires = "expires=" + d.toUTCString();
+        
+        let streakCookie = streakdatestring_streakinteger_array();
+        if (streakCookie[0] == "") {
+          document.getElementById("streak").innerHTML = "last mission: never<br>mission streak: 0";
+        } else {
+          var streakDate = streakCookie[0];
+          let dstreak = new Date(streakDate);
+          dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
+          if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
+            var streakNo = streakCookie[1];
+            document.getElementById("streak").innerHTML = "streak start: " + streakDate + "<br>mission streak: " + streakNo;
+          } else {
+            document.cookie = "streak=" + formatDate(date) + "#;" + expires + ";path=/;";
+            document.getElementById("streak").innerHTML = "last mission: " + streakDate + "<br>mission streak: 0";
+          }
+        }
+      }
+      
       function getCookie(cname) {
         let name = cname + "=";
         let ca = document.cookie.split(';');
@@ -629,13 +653,13 @@
           let missionDate = new Date(missionDateParsed);
           if (missionDate.getFullYear() == date.getFullYear() & missionDate.getMonth() == date.getMonth() & missionDate.getDate() == date.getDate()) {
             document.getElementById("click").style.visibility = "hidden";
-            updateStreak();
           }
         }
       } else {
         document.getElementById("click").style.visibility = "hidden";
-        updateStreak();
       }
+
+      checkStreak();
 
 
     </script>
