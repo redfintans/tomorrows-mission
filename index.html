@@ -37,6 +37,13 @@
         text-align: center;
         width: 100vw;
       }
+      #note2 {
+        position: absolute;
+        top: 15vh;
+        left: 10vw;
+        font-size: 10pt;
+        text-align: left;
+      }
       #complete {
         position: relative;
         top: 55vh;
@@ -433,6 +440,7 @@
     <div id="note">updates every day at 8pm <br> refresh the page <br><br></div>
     <div id="complete">good work! mission completion stored as a cookie</div>
     <button id="click" onclick="completeMission()">completed today's mission!</button>
+    <div id="note2">completed missions: ERROR</div>
     <div id="confet1"></div>
     <div id="confet2"></div>
     <div id="confet3"></div>
@@ -558,11 +566,14 @@
       const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
       const msAfterEight = msSinceIncident - 86400000 * daysSinceIncident;
 
+      let completedMissions = getCookie("missions").split("#");
+      completedMissions.pop();
+
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
+      document.getElementById("note2").innerHTML = "completed missions: " + completedMissions.length;
+
       if (msAfterEight >= 14400000) {
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
-        let completedMissions = getCookie("missions").split("#");
-        completedMissions.pop();
         for (let mission of completedMissions) {
           let missionDateParsed = mission.split("&")[0];
           let missionDate = new Date(missionDateParsed);
