@@ -574,12 +574,12 @@
       }
 
       function updateStreak() {
-        let streakCookie = getCookie("streak");
+        let streakCookie = streakdatestring_streakinteger_array();
         if (streakCookie == "") {
           var streakNo = 0;
           var streakDate = "never";
         } else {
-          var streakNo = streakCookie[1].length;
+          var streakNo = streakCookie[1];
           var streakDate = streakCookie[0]; 
         }
         document.getElementById("streak").innerHTML = "last mission: " + streakDate + "<br>mission streak: " + streakNo;
