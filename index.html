@@ -522,6 +522,10 @@
         missionComplete(missions[daysSinceIncident]);
         document.getElementById("click").style.visibility = "hidden";
         document.getElementById("complete").style.visibility = "visible";
+        completedMissions = getCookie("missions").split("#");
+        completedMissions.pop();
+        document.getElementById("count").innerHTML = "completed missions: " + completedMissions.length;
+        checkStreakBeforeEight();
         setTimeout(hide, 3000);
         unleash();
       }
@@ -545,61 +549,64 @@
         let missionCookies = getCookie("missions");
         latestMissionCookies = missionCookies + formatDate(date) + "&" + text + "#";
         document.cookie = "missions=" + latestMissionCookies + ";" + expires + ";path=/;";
-        
-        //updateStreak();
       }
 
-      function streakdatestring_streakinteger_array() {
-        let streakCookie = getCookie("streak");
-        if (streakCookie != "") {
-          let s = streakCookie.split("#");
-          let streakCount = s.pop().length;
-          return [s[0], streakCount];
-        }
-        return ["", 0];
-      }
-
-      function updateStreak() {
-        var d = new Date();
-        d.setTime(d.getTime() + (400 * 24 * 60 * 60 * 1000)); // 400 days is the limit for cookie expiration
-        let expires = "expires=" + d.toUTCString();
-        
-        let streakCookie = streakdatestring_streakinteger_array();
-        if (streakCookie[0] == "") {
+      function checkStreakBeforeEight() {
+        let lastItem = completedMissions[completedMissions.length - 1];
+        if (lastItem == undefined) {
           document.getElementById("streak").innerHTML = "last mission: never<br>mission streak: 0";
         } else {
-          var streakDate = streakCookie[0];
-          let dstreak = new Date(streakDate);
-          dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
-          if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
-            document.cookie = "streak=" + getCookie("streak") + "&;" + expires + ";path=/;";
-            var streakNo = streakCookie[1] + 1;
-            document.getElementById("streak").innerHTML = "streak start: " + streakDate + "<br>mission streak: " + streakNo;
+          let lastMission = new Date(lastItem.split("&")[0]);
+          if (lastMission.getFullYear() == date.getFullYear() & lastMission.getMonth() == date.getMonth() & lastMission.getDate() == date.getDate()) {
+            var streakNo = countStreak();
+            var streakStart = completedMissions[completedMissions.length - streakNo].split("&")[0];
+            document.getElementById("streak").innerHTML = "streak start: " + streakStart + "<br>mission streak: " + streakNo;
           } else {
-            document.cookie = "streak=" + formatDate(date) + "#&;" + expires + ";path=/;";
-            document.getElementById("streak").innerHTML = "last mission: " + formatDate(date) + "<br>mission streak: 1";
+            checkMission = new Date();
+            checkMission.setTime(lastMission.getTime() + (24 * 60 * 60 * 1000));
+            if (checkMission.getFullYear() == date.getFullYear() & checkMission.getMonth() == date.getMonth() & checkMission.getDate() == date.getDate()) {
+              var streakNo = countStreak();
+              var streakStart = completedMissions[completedMissions.length - streakNo].split("&")[0];
+              document.getElementById("streak").innerHTML = "streak start: " + streakStart + "<br>mission streak: " + streakNo + "<br>streak at risk!";
+            } else {
+              document.getElementById("streak").innerHTML = "last mission: " + formatDate(lastMission) + "<br>mission streak: 0";
+            }
           }
         }
       }
 
-      function checkStreak() {
-        var d = new Date();
-        d.setTime(d.getTime() + (400 * 24 * 60 * 60 * 1000)); // 400 days is the limit for cookie expiration
-        let expires = "expires=" + d.toUTCString();
-        
-        let streakCookie = streakdatestring_streakinteger_array();
-        if (streakCookie[0] == "") {
+      function checkStreakAfterEight() {
+        let lastItem = completedMissions[completedMissions.length - 1];
+        if (lastItem == undefined) {
           document.getElementById("streak").innerHTML = "last mission: never<br>mission streak: 0";
         } else {
-          var streakDate = streakCookie[0];
-          let dstreak = new Date(streakDate);
-          dstreak.setTime(dstreak.getTime() + (24 * 60 * 60 * 1000));
-          if (dstreak.getFullYear() == date.getFullYear() & dstreak.getMonth() == date.getMonth() & dstreak.getDate() == date.getDate()) {
-            var streakNo = streakCookie[1];
-            document.getElementById("streak").innerHTML = "streak start: " + streakDate + "<br>mission streak: " + streakNo;
+          let lastMission = new Date(lastItem.split("&")[0]);
+          if (lastMission.getFullYear() == date.getFullYear() & lastMission.getMonth() == date.getMonth() & lastMission.getDate() == date.getDate()) {
+            var streakNo = countStreak();
+            var streakStart = completedMissions[completedMissions.length - streakNo].split("&")[0];
+            document.getElementById("streak").innerHTML = "streak start: " + streakStart + "<br>mission streak: " + streakNo;
           } else {
-            document.cookie = "streak=" + formatDate(date) + "#;" + expires + ";path=/;";
-            document.getElementById("streak").innerHTML = "last mission: " + streakDate + "<br>mission streak: 0";
+            document.getElementById("streak").innerHTML = "last mission: " + formatDate(lastMission) + "<br>mission streak: 0";
+          }
+        }
+      }
+
+      function countStreak() {
+        for (let i = 1; i <= completedMissions.length; i++) {
+          var prevMission = completedMissions[completedMissions.length - i - 1];
+          if (prevMission == undefined) {
+            return completedMissions.length;
+          } else {
+            var missionDateParsed = prevMission.split("&")[0];
+            let missionDatePrev = new Date(missionDateParsed);
+            missionDateParsed = completedMissions[completedMissions.length - i].split("&")[0];
+            let missionDateLast = new Date(missionDateParsed);
+            missionDatePrev.setTime(missionDatePrev.getTime() + (24 * 60 * 60 * 1000));
+            if (missionDatePrev.getFullYear() == missionDateLast.getFullYear() & missionDatePrev.getMonth() == missionDateLast.getMonth() & missionDatePrev.getDate() == missionDateLast.getDate()) {
+              continue;
+            } else {
+              return i;
+            }
           }
         }
       }
@@ -629,9 +636,9 @@
         `walk up to a stranger in school and ask them "can i ask you a question?", then when they say yes, say "thank you" and walk away`,
         `while talking to or texting a friend, randomly say "calm down" and then refuse to elaborate afterwards`,
         `at the end of the day, text a friend saying "sorry i couldn't join you guys today, hope you all had fun" even though you didn't have plans`,
-        `do 20 push ups`,
-        `do 20 more push ups`,
-        `in conversation or text, randomly say you "had a dream about this very moment"`
+        `do 20 push-ups`,
+        `do 20 more push-ups`,
+        `in conversation or text, randomly mention that you "had a dream about this very moment"`
       ];
       
       const date = new Date();
@@ -640,13 +647,14 @@
       const daysSinceIncident = Math.floor(msSinceIncident / 86400000);
       const msAfterEight = msSinceIncident - 86400000 * daysSinceIncident;
 
-      let completedMissions = getCookie("missions").split("#");
+      var completedMissions = getCookie("missions").split("#");
       completedMissions.pop();
 
       document.getElementById("mission").innerHTML = missions[daysSinceIncident];
       document.getElementById("count").innerHTML = "completed missions: " + completedMissions.length;
 
       if (msAfterEight >= 14400000) {
+        checkStreakBeforeEight();
         document.getElementById("titlescreen").innerHTML = "TODAY'S MISSION";
         for (let mission of completedMissions) {
           let missionDateParsed = mission.split("&")[0];
@@ -656,10 +664,9 @@
           }
         }
       } else {
+        checkStreakAfterEight();
         document.getElementById("click").style.visibility = "hidden";
       }
-
-      //checkStreak();
 
 
     </script>
